@@ -15,11 +15,11 @@ echo "\n</head>";
 
 echo "\n";
 
-//数据库（需要有一张表包含code,date,times）
+//数据库（需要有一张表包含code,text,date,times）
 $dbConf = array(
 	'host' => '127.0.0.1',
-	'user' => '',
-	'pwd' => '',
+	'user' => 'smm',
+	'pwd' => '123456',
 	'db' => 'temp',
 	'tb' => 'poster',
 	'port' => 3306
@@ -37,16 +37,9 @@ if (mysqli_connect_errno()){
 if ($_POST['code']){
 	if (is_nan($_POST['date'])) exit;
 	$timestamp = time() + $_POST['date'] * 3600 * 24;
-	$sql = $conn->query("insert into " . $dbConf['tb'] . " values('" . $_POST['code'] . "'," . $timestamp . "," . $_POST['times'] . ")");
-	if ((!$sql) || ($conn->affected_rows < 1)) echo "创建失败，错误：" . mysqli_errno($conn) . " " . mysqli_error($conn);
 	
-	$file = fopen($_POST['code'] . ".txt",'w');
-	if (!$file) {
-		echo "文件无法打开或无法创建！文件位置" . $_POST['code'] . ".txt";
-		exit;
-	}
-	fwrite($file,htmlspecialchars($_POST['text']));
-	fclose($file);
+	$sql = $conn->query("insert into " . $dbConf['tb'] . " values('" . $_POST['code'] . "','" . $_POST['text'] . "'," . $timestamp . "," . $_POST['times'] . ")");
+	if ((!$sql) || ($conn->affected_rows < 1)) echo "创建失败，错误：" . mysqli_errno($conn) . " " . mysqli_error($conn);
 	
 	echo "创建成功";
 }
@@ -62,7 +55,7 @@ if ($_GET['code']){
 				$conn->query("update "  . $dbConf['tb'] . " set times = '" . $newTimes . "' where code='" . $_GET['code'] . "'");
 			}
 			if ($result['date'] - time() >= 0) {
-				if (file_exists($_GET['code'] . ".txt")) echo file_get_contents($_GET['code'] . ".txt"); else echo "页面不存在";
+				echo $result['text'];
 			} else {
 				echo "超时";
 				$conn->query("delete from " . $dbConf['tb'] . " where code='" . $_GET['code'] . "'");

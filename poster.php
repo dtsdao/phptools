@@ -3,7 +3,6 @@
 //By DTSDAO
 
 //PageName:Poster
-//Include:poster/
 //CreateTime:2017.1.19
 
 //DATABASE_SET in poster/load.php!!!
@@ -41,7 +40,7 @@ if ($_SESSION['login'] !== true) {
 	exit;
 }
 ?>
-<form action="poster/load.php" method="POST">
+<form action="decode.php" method="POST">
 	新建临时授权页：<br />
 	授权码（唯一）：<input name="code" value="<?php echo md5(time()); ?>" onclick="this.select()"><br />
 	有效期：<input name="date" value="1">天<br />
